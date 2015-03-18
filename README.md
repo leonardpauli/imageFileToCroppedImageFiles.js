@@ -9,10 +9,11 @@ The crop function will scale aspect fill the image to the desired size. If the i
 ##Example:
 
 ```javascript
-$("#inp").change(function(){
-  var sizes = [{w:400,h:400},{w:120,h:120},{w:60,h:60}];
+$("#input").change(function(){
+  var sizes = [{ w:400, h:400 },{ w:120, h:120 },{ w:60, h:60 }];
   imageFileToCroppedImageFiles(file, sizes, function (files) {
-    var files = {original:file,default:files[0],medium:files[1],small:files[2]};
+    var allFiles = { original:file, default:files[0], medium:files[1], small:files[2] };
+    // All files ready
   }
 });
 ```

@@ -18,14 +18,7 @@ dataURItoBlob(dataURI) -> Blob
 */
 
 
-window.aspectContainImageCrop = function(image, size, isPng) {
-  
-  // Get a canvas to draw on
-  var canvas = $('<canvas/>');
-  canvas.attr({width:size.w,height:size.h});
-  canvas.hide().appendTo('body');
-
-  var ctx = canvas.get(0).getContext('2d');
+function aspectContainImageCrop(image, size, isPng) {
 
   // Get smallest source/destination size factor
   var scale = Math.min(image.width/size.w, image.height/size.h);
@@ -46,6 +39,14 @@ window.aspectContainImageCrop = function(image, size, isPng) {
     x:(image.width-toSize.w)/2,
     y:(image.height-toSize.h)/2
   };
+  console.log(imageScale, toSize);
+  
+  // Get a canvas to draw on
+  var canvas = $('<canvas/>');
+  canvas.attr({width:toSize.w*imageScale,height:toSize.h*imageScale});
+  canvas.hide().appendTo('body');
+
+  var ctx = canvas.get(0).getContext('2d');
   
   // Cut and resize image by drawing it scaled in a frame
   ctx.drawImage(image, cutStart.x, cutStart.y, toSize.w, toSize.h, 0, 0, toSize.w*imageScale, toSize.h*imageScale);
@@ -79,7 +80,7 @@ window.getImageFromFile = function(file, callback) {
     callback(image);
     URL.revokeObjectURL(image.src)
   }
-  image.src = URL.createObjectURL(input.files[0]);
+  image.src = URL.createObjectURL(file);
 }
 
 window.dataURItoBlob = function(dataURI) {
@@ -107,9 +108,10 @@ window.imageFileToCroppedImageFiles = function(file, sizes, callback) {
   getImageFromFile(file, function (original) {
     if (!original) return callback();
 
-    var files = [dataURItoBlob(original)];
+    var files = [];
     for (var i = 0; i<sizes.length; i++)
       files[files.length] = dataURItoBlob(aspectContainImageCrop(original, sizes[i], isPng));
+    
     return callback(files);
   });
 }
