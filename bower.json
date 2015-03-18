@@ -1,0 +1,28 @@
+{
+  "name": "imageFileToCroppedImageFiles.js",
+  "version": "1.0.0",
+  "authors": [
+    "Leonard Pauli <leonardpauli@me.com>"
+  ],
+  "description": "Resize an js image file to multiple image files with different sizes, client side.",
+  "main": "imageFileToCroppedImageFiles.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "image",
+    "file",
+    "crop",
+    "canvas",
+    "input",
+    "upload"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
