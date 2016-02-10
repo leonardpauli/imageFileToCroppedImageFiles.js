@@ -47,7 +47,7 @@ function aspectContainImageCrop(image, size, isPng) {
   })(ctx, canvas, image);
 
   // Get smallest source/destination size factor
-  var scale = (isPng?Math.min:Math.max)(image.width/size.w, image.height/size.h);
+  var scale = (isPng?Math.max:Math.min)(image.width/size.w, image.height/size.h);
 
   // Scale destination so that smallest
   // side matches smallest source side
