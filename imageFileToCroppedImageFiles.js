@@ -32,7 +32,8 @@ function aspectContainImageCrop(image, size, fillModeContain) {
   var ctx = canvas.getContext('2d');
 
   // Figure out if the image has transparancy
-  if (fillModeContain===null) fillModeContain = (function (ctx, canvas, image) {
+  if (fillModeContain === undefined || fillModeContain === null)
+   fillModeContain = (function (ctx, canvas, image) {
     canvas.setAttribute('width', image.width/3);
     canvas.setAttribute('height', image.height/3);
 
@@ -47,7 +48,8 @@ function aspectContainImageCrop(image, size, fillModeContain) {
       }
 
     return isTrans;
-  })(ctx, canvas, image);
+   })(ctx, canvas, image);
+  }
 
   // Get smallest source/destination size factor
   var scale = (fillModeContain?Math.max:Math.min)(image.width/size.w, image.height/size.h);
