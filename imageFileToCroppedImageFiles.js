@@ -1,35 +1,38 @@
-/*
+/* imageFileToCroppedImageFiles.js
+Turns an original image file into multiple cropped/scaled ones - client side.
 
-Title: imageFileToCroppedImageFiles.js
-Original creator: Leonard Pauli
+Originally created by Leonard Pauli
+Copyright © Leonard Pauli 2015-2016
+
 Date: 18/3-2015
+Rework: 20/2-2016
 License: MIT
+*/
 
-Functions:
+/* Functions:
 
-aspectContainImageCrop(image, size, isPng) -> Image
-imageFileToCroppedImageFiles(file, sizes, callback) (files)
+ - aspectContainImageCrop(image, size[, fillModeContain]) -> Image
+ - imageFileToCroppedImageFiles(file, sizes, callback) (files)
 
-getImageFromSrc(src, callback) (image)
-getImageFromFile(file, callback) (image)
+ - getImageFromSrc(src, callback) (image)
+ - getImageFromFile(file, callback) (image)
 
-dataURItoBlob(dataURI) -> Blob
-
+ - dataURItoBlob(dataURI) -> Blob
 */
 
 
-function aspectContainImageCrop(image, size, isPng) {
+function aspectContainImageCrop(image, size, fillModeContain) {
 
   // Only possibly necessary for remote images to prevent
   // x-origin error (lookup if it's needed at all)
-  image.crossOrigin='anonymous'
+  image.crossOrigin='anonymous';
 
   // Get a canvas to draw on
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
 
   // Figure out if the image has transparancy
-  isPng = isPng | (function (ctx, canvas, image) {
+  if (fillModeContain===null) fillModeContain = (function (ctx, canvas, image) {
     canvas.setAttribute('width', image.width/3);
     canvas.setAttribute('height', image.height/3);
 
@@ -47,7 +50,7 @@ function aspectContainImageCrop(image, size, isPng) {
   })(ctx, canvas, image);
 
   // Get smallest source/destination size factor
-  var scale = (isPng?Math.max:Math.min)(image.width/size.w, image.height/size.h);
+  var scale = (fillModeContain?Math.max:Math.min)(image.width/size.w, image.height/size.h);
 
   // Scale destination so that smallest
   // side matches smallest source side
@@ -65,7 +68,6 @@ function aspectContainImageCrop(image, size, isPng) {
     x:(image.width-toSize.w)/2,
     y:(image.height-toSize.h)/2
   };
-  console.log(imageScale, toSize);
   
   // Reset the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -77,7 +79,7 @@ function aspectContainImageCrop(image, size, isPng) {
   
   // Convert image to data
   var base64ImageData;
-  if (isPng) base64ImageData = canvas.toDataURL("image/png");
+  if (fillModeContain) base64ImageData = canvas.toDataURL("image/png");
   else base64ImageData = canvas.toDataURL("image/jpeg", 0.8);
 
   // Clean up
@@ -127,14 +129,13 @@ window.dataURItoBlob = function(dataURI) {
     return new Blob([ia], {type:mimeString});
 }
 
-window.imageFileToCroppedImageFiles = function(file, sizes, callback) {
-  var isPng = file.type==="image/png";
+window.imageFileToCroppedImageFiles = function(file, sizes, callback, fillModeContain) {
   getImageFromFile(file, function (original) {
     if (!original) return callback();
 
     var files = [];
     for (var i = 0; i<sizes.length; i++)
-      files[files.length] = dataURItoBlob(aspectContainImageCrop(original, sizes[i], isPng));
+      files[files.length] = dataURItoBlob(aspectContainImageCrop(original, sizes[i], fillModeContain));
     
     return callback(files);
   });

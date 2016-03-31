@@ -1,12 +1,15 @@
 # imageFileToCroppedImageFiles.js
-Basically, image file to cropped image files, client side, javascript.
+Turns an original image file into multiple cropped/scaled ones - client side.
 
 We use it to resize an image to multiple versions (small, medium, large) before uploading it to an external store-only server.
 The image is chosen through a file input, and uploaded as a file, hence the need to convert it from and to a file.
 
-The crop function will scale aspect fill the image to the desired size. If the image is too small, it will cut it (while keeping center at center) to match the destination proportions.
+1. The crop function will scale aspect fill (css `background-size: cover;` style) the image to the desired size.
+2. If the image is too small, it will cut it (while keeping center at center) to match the destination proportions.
+3. If the image contains transparancy, or the *fillModeContain* flag is set, it will scale aspect to contain instead (css `background-size: contain;` style).
 
-##Example:
+
+## Example:
 
 ```javascript
 $("#input").change(function(){
@@ -18,20 +21,26 @@ $("#input").change(function(){
 });
 ```
 
-##Functions:
+
+## Functions:
 
 ```javascript
-aspectContainImageCrop(image, size, isPng) -> Image
-imageFileToCroppedImageFiles(file, sizes, callback) callback(files)
+aspectContainImageCrop(image, size[, fillModeContain])    						-> Image
+imageFileToCroppedImageFiles(file, sizes, callback, fillModeContain) 	-> callback(files)
 
-getImageFromSrc(src, callback) callback(image)
-getImageFromFile(file, callback) callback(image)
+getImageFromSrc(src, callback) 	                          						-> callback(image)
+getImageFromFile(file, callback)                          						-> callback(image)
 
-dataURItoBlob(dataURI) -> Blob
+dataURItoBlob(dataURI)                                    						-> Blob
 ```
 
-##More
+(Where fillModeContain is eigther null (auto, contain if transparent bg), true (force contain), false (force cover))
 
-Original creator: Leonard Pauli,
-Date: 18/3-2015,
-License: MIT
+
+---
+
+Feel free to contribute, and to open issues/requests.
+
+Original creator: Leonard Pauli,  
+Date: 18/3-2015,  
+License: MIT  
