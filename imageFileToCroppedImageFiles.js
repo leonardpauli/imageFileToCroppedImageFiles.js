@@ -32,7 +32,7 @@ function aspectContainImageCrop(image, size, fillModeContain) {
   var ctx = canvas.getContext('2d');
 
   // Figure out if the image has transparancy
-  if (fillModeContain === undefined || fillModeContain === null)
+  if (fillModeContain === undefined || fillModeContain === null) {
    fillModeContain = (function (ctx, canvas, image) {
     canvas.setAttribute('width', image.width/3);
     canvas.setAttribute('height', image.height/3);
