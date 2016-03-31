@@ -21,7 +21,7 @@ License: MIT
 */
 
 
-function aspectContainImageCrop(image, size, fillModeContain) {
+function aspectContainImageCrop(image, size, fillModeContain, fileType) {
 
   // Only possibly necessary for remote images to prevent
   // x-origin error (lookup if it's needed at all)
@@ -81,7 +81,7 @@ function aspectContainImageCrop(image, size, fillModeContain) {
   
   // Convert image to data
   var base64ImageData;
-  if (fillModeContain) base64ImageData = canvas.toDataURL("image/png");
+  if (fileType === "image/png") base64ImageData = canvas.toDataURL("image/png");
   else base64ImageData = canvas.toDataURL("image/jpeg", 0.8);
 
   // Clean up
@@ -137,7 +137,7 @@ window.imageFileToCroppedImageFiles = function(file, sizes, callback, fillModeCo
 
     var files = [];
     for (var i = 0; i<sizes.length; i++)
-      files[files.length] = dataURItoBlob(aspectContainImageCrop(original, sizes[i], fillModeContain));
+      files[files.length] = dataURItoBlob(aspectContainImageCrop(original, sizes[i], fillModeContain, file.type));
     
     return callback(files);
   });
