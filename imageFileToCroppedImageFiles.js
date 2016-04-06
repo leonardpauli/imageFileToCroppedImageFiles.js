@@ -21,7 +21,7 @@ License: MIT
 */
 
 
-function aspectContainImageCrop(image, size, fillModeContain) {
+function aspectContainImageCrop(image, size, fillModeContain, fileType) {
 
   // Only possibly necessary for remote images to prevent
   // x-origin error (lookup if it's needed at all)
@@ -32,7 +32,8 @@ function aspectContainImageCrop(image, size, fillModeContain) {
   var ctx = canvas.getContext('2d');
 
   // Figure out if the image has transparancy
-  if (fillModeContain===null) fillModeContain = (function (ctx, canvas, image) {
+  if (fillModeContain === undefined || fillModeContain === null) {
+   fillModeContain = (function (ctx, canvas, image) {
     canvas.setAttribute('width', image.width/3);
     canvas.setAttribute('height', image.height/3);
 
@@ -47,7 +48,8 @@ function aspectContainImageCrop(image, size, fillModeContain) {
       }
 
     return isTrans;
-  })(ctx, canvas, image);
+   })(ctx, canvas, image);
+  }
 
   // Get smallest source/destination size factor
   var scale = (fillModeContain?Math.max:Math.min)(image.width/size.w, image.height/size.h);
@@ -79,7 +81,7 @@ function aspectContainImageCrop(image, size, fillModeContain) {
   
   // Convert image to data
   var base64ImageData;
-  if (fillModeContain) base64ImageData = canvas.toDataURL("image/png");
+  if (fileType === "image/png") base64ImageData = canvas.toDataURL("image/png");
   else base64ImageData = canvas.toDataURL("image/jpeg", 0.8);
 
   // Clean up
@@ -135,7 +137,7 @@ window.imageFileToCroppedImageFiles = function(file, sizes, callback, fillModeCo
 
     var files = [];
     for (var i = 0; i<sizes.length; i++)
-      files[files.length] = dataURItoBlob(aspectContainImageCrop(original, sizes[i], fillModeContain));
+      files[files.length] = dataURItoBlob(aspectContainImageCrop(original, sizes[i], fillModeContain, file.type));
     
     return callback(files);
   });
